@@ -93,7 +93,7 @@ export default function GRIntelligence() {
 
   useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [chatMsgs]);
 
-  const callAPI = async (messages, onChunk) => {
+  const callAPI = async (messages) => {
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -105,6 +105,9 @@ export default function GRIntelligence() {
         messages,
       }),
     });
+    const data = await res.json();
+    return (data.content || []).filter(b => b.type === "text").map(b => b.text).join("\n").trim();
+  };
 
     const reader = res.body.getReader();
     const decoder = new TextDecoder();
