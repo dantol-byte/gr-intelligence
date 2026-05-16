@@ -1,0 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Inter:wght@300;400;500;600&display=swap');
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; background: #080c13; }
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: #1e2a38; border-radius: 2px; }
+.tab-btn:hover { color: #c8bfaf !important; }
+.card:hover { background: #0d1520 !important; border-color: #243040 !important; }
+.nav-item:hover { background: #0d1418 !important; color: #c8bfaf !important; }
+.sh-row:hover { background: #0d1520 !important; cursor: pointer; }
+.filter-btn:hover { border-color: #c9a227 !important; color: #c9a227 !important; }
+.btn:hover { background: #b8901f !important; }
+.clear:hover { color: #c9a227 !important; }
+textarea:focus, input:focus { outline: none !important; }
