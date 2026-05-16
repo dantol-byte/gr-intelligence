@@ -93,20 +93,43 @@ export default function GRIntelligence() {
 
   useEffect(() => { chatEndRef.current?.scrollIntoView({ behavior: "smooth" }); }, [chatMsgs]);
 
-  const callAPI = async (messages) => {
+  const callAPI = async (messages, onChunk) => {
     const res = await fetch("/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        model: 'claude-sonnet-4-5',
-        max_tokens: 500,
+        model: "claude-sonnet-4-5",
+        max_tokens: 600,
         system: SYSTEM_PROMPT,
         tools: [{ type: "web_search_20250305", name: "web_search" }],
         messages,
       }),
     });
-    const data = await res.json();
-    return (data.content || []).filter(b => b.type === "text").map(b => b.text).join("\n").trim();
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+    let fullText = "";
+    let buffer = "";
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buffer += decoder.decode(value, { stream: true });
+      const lines = buffer.split("\n");
+      buffer = lines.pop();
+      for (const line of lines) {
+        if (line.startsWith("data: ")) {
+          try {
+            const json = JSON.parse(line.slice(6));
+            if (json.type === "content_block_delta" && json.delta?.type === "text_delta") {
+              fullText += json.delta.text;
+              if (onChunk) onChunk(fullText);
+            }
+          } catch {}
+        }
+      }
+    }
+    return fullText;
   };
 
   const generateBriefing = async (pillarId) => {
