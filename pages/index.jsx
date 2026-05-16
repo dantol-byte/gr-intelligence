@@ -99,7 +99,7 @@ export default function GRIntelligence() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         model: 'claude-sonnet-4-5',
-        max_tokens: 1000,
+        max_tokens: 500,
         system: SYSTEM_PROMPT,
         tools: [{ type: "web_search_20250305", name: "web_search" }],
         messages,
